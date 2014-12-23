@@ -52,7 +52,7 @@ void RSManagerDX9::initResources(bool downsampling, unsigned rw, unsigned rh,
 
 	// performance measurement
 	console.add(frameTimeText);
-	perfMonitor = new D3DPerfMonitor(d3ddev, 60);
+	perfMonitor.reset(new D3DPerfMonitor(d3ddev, 60));
 	console.add(traceText);
 
 	// create state block for state save/restore
@@ -125,9 +125,10 @@ void RSManagerDX9::releaseResources() {
 	d3ddev->GetBackBuffer(0, 0, D3DBACKBUFFER_TYPE_MONO, &bb);
 	d3ddev->SetRenderTarget(0, bb);
 	SAFERELEASE(bb);
+
 	SDLOG(0, "RenderstateManager releasing resources\n");
 	SAFEDELETE(plugin);
-	SAFEDELETE(perfMonitor);
+	perfMonitor.reset(NULL);
 	SAFERELEASE(depthStencilSurf);
 	extraBuffer.reset(NULL);
 	imgWriter.reset(NULL);
@@ -139,6 +140,7 @@ void RSManagerDX9::releaseResources() {
 	SAFERELEASE(prevRenderTarget);
 	backBuffers.clear();
 	console.cleanup();
+
 	SDLOG(0, "RenderstateManager resource release completed\n");
 }
 
