@@ -1,4 +1,12 @@
-**-12-2014 -- beta 16 - "Third Ensemble"
+??-??-2015 -- beta 17 - "Forlane | Rei"
+=======================================
+General:
+- Add profiles for many games
+Postprocessing:
+- allow loading of optional noise texture
+- update asmodean effects file
+
+24-12-2014 -- beta 16 - "Third Ensemble"
 ========================================
 General:
 - Fixed bugs related to forcing borderless FS with GeDoSaTo (improves compatibility)
@@ -6,6 +14,10 @@ General:
 - Implemented modifiers (Ctrl, Alt, Shift) for keybindings
 - Made "reloadShaders" keybinding correctly reload bloom shader
 - Added some new profiles and whitelist entries
+- Cleaned up various potential sources of memory leaks
+- Fixed infinite shader hash table growth by introducing "trackShaders" setting
+Final Fantasy 13 Plugin:
+- Disabled the plugin, as the game settings + the generic plugin can replicate all its functions
 
 30-11-2014 -- beta 15 - "Tokikagura"
 ====================================

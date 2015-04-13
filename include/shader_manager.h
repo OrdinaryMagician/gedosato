@@ -25,18 +25,28 @@ class ShaderManager {
 		}
 		UINT32 id = SuperFastHash(static_cast<char*>(disassembly->GetBufferPointer()), disassembly->GetBufferSize());
 		SDLOG(8, " -> Shader code (hash %08x):\n%s\n===============\n", id, static_cast<char*>(disassembly->GetBufferPointer()));
-		shaderPtrIdMap.emplace(pShader, id);
+		if(Settings::get().getTrackShaders()) shaderPtrIdMap.emplace(pShader, id);
 
 		// given names
 		#define SHADER(_name, _id) \
-		if(_id == id) shaderPtrNameMap.emplace(pShader, #_name);
+		if(_id == id) { \
+			shaderPtrNameMap.emplace(pShader, #_name); \
+			shaderPtrIdMap.emplace(pShader, id); \
+		}
 		#include "shaders.def"
 		#undef SHADER
 
 		// name fallback
+		string name = format("%08x", id);
 		if(shaderPtrNameMap.find(pShader) == shaderPtrNameMap.end()) {
-			shaderPtrNameMap.emplace(pShader, format("%08x", id));
+			if(Settings::get().getTrackShaders()
+				|| name == Settings::get().getInjectPSHash()
+				|| name == Settings::get().getInjectVSHash()) {
+				shaderPtrNameMap.emplace(pShader, name);
+			}
 		}
+
+		disassembly->Release();
 	}
 
 public:
