@@ -33,12 +33,12 @@ private:
 	std::vector<Size> stepSizes;
 	std::vector<RenderTargetPtr> stepBuffers[2];
 
-	D3DXHANDLE inputPixelMetricsHandle, invStepsHandle;
+	D3DXHANDLE inputPixelMetricsHandle, invStepsHandle, passCounterHandle;
 	D3DXHANDLE sampleTexHandle, passTexHandle, dirtTexHandle, avgTexHandle;
 	D3DXHANDLE initialCutoffAndDownsampleHandle, gaussianHandle, integrateUpwardsHandle, eyeAdaptionHandle, finalComposeHandle;
 	
 	void initialPass(IDirect3DTexture9* src, IDirect3DSurface9* dst);
-	void blurPass(IDirect3DTexture9* src, IDirect3DSurface9* dst, int sw, int sh, bool horizontal);
+	void blurPass(IDirect3DTexture9* src, IDirect3DSurface9* dst, int sw, int sh, bool horizontal, float pct);
 	void upPass(IDirect3DTexture9* src, IDirect3DSurface9* dst, int sw, int sh);
 	void eyePass(IDirect3DTexture9* src, IDirect3DSurface9* dst);
 	void finalPass(IDirect3DTexture9* src, IDirect3DTexture9* eye, IDirect3DTexture9* frame, IDirect3DSurface9* dst);

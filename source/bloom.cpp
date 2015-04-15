@@ -73,6 +73,7 @@ void Bloom::reloadShader() {
 			if(__name##Handle == NULL) SDLOG(-1, "ERROR loading handle %s in Bloom effect\n", #__name);
 		GETHANDLE(inputPixelMetrics)
 			GETHANDLE(invSteps);
+			GETHANDLE(passCounter);
 		GETHANDLE(sampleTex);
 		GETHANDLE(passTex);
 		GETHANDLE(dirtTex);
@@ -111,14 +112,16 @@ void Bloom::go(IDirect3DTexture9 *hdrFrame, IDirect3DTexture9 *composeFrame, IDi
 	
 	// traverse pyramid down
 	unsigned cur = 0;
+	float pct;
 	for(; cur<steps-1; ++cur) {
 		if(dumping) {
 			RSManager::getDX9().dumpTexture("Bloom_STEP_in", stepBuffers[0][cur]->getTex());
 		}
 		if(cur<steps-STEP_SKIP) {
 			// first Blur
-			blurPass(stepBuffers[0][cur]->getTex(), stepBuffers[1][cur]->getSurf(), stepSizes[cur].w, stepSizes[cur].h, true);
-			blurPass(stepBuffers[1][cur]->getTex(), stepBuffers[0][cur]->getSurf(), stepSizes[cur].w, stepSizes[cur].h, false);
+			pct = cur/(float)(steps-STEP_SKIP);
+			blurPass(stepBuffers[0][cur]->getTex(), stepBuffers[1][cur]->getSurf(), stepSizes[cur].w, stepSizes[cur].h, true, pct);
+			blurPass(stepBuffers[1][cur]->getTex(), stepBuffers[0][cur]->getSurf(), stepSizes[cur].w, stepSizes[cur].h, false, pct);
 			if(dumping) {
 				RSManager::getDX9().dumpTexture("Bloom_STEP_out", stepBuffers[0][cur]->getTex());
 			}
@@ -168,13 +171,14 @@ void Bloom::initialPass(IDirect3DTexture9* src, IDirect3DSurface9* dst) {
 	effect->End();
 }
 
-void Bloom::blurPass(IDirect3DTexture9* src, IDirect3DSurface9* dst, int sw, int sh, bool horizontal) {
+void Bloom::blurPass(IDirect3DTexture9* src, IDirect3DSurface9* dst, int sw, int sh, bool horizontal, float pct) {
 	device->SetRenderTarget(0, dst);
 
     // Setup variables.
     effect->SetTexture(passTexHandle, src);
 	D3DXVECTOR4 ps(1.0f/sw, 1.0f/sh, static_cast<FLOAT>(sw), static_cast<FLOAT>(sh));
     effect->SetVector(inputPixelMetricsHandle, &ps);
+    effect->SetFloat(passCounterHandle, pct);
 	
     // Do it!
     effect->SetTechnique(gaussianHandle);
