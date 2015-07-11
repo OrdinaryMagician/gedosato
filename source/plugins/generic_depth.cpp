@@ -90,7 +90,17 @@ void GenericDepthPlugin::process(IDirect3DSurface9* backBuffer) {
 			if(doPost && post) {
 				didPost = true;
 				if(didAO || didAA) d3ddev->StretchRect(backBuffer, NULL, tmp->getSurf(), NULL, D3DTEXF_NONE);
-				post->go(tmp->getTex(), backBuffer);
+				if(texw ==0) {
+					if(depthTexture->isSupported()) {
+						if(manager.usingMultisampling()) depthTexture->resolveDepth(d3ddev);
+						post->go(tmp->getTex(), depthTexture->getTexture(), backBuffer);
+					}
+				}
+				else if(depthTextureAlt->isSupported()) {
+					if(manager.usingMultisampling()) depthTextureAlt->resolveDepth(d3ddev);
+					post->go(tmp->getTex(), depthTextureAlt->getTexture(), backBuffer);
+				}
+				else post->go(tmp->getTex(), NULL, backBuffer);
 			}
 			if(doDof && dof) {
 				if(didAO || didAA || didPost) d3ddev->StretchRect(backBuffer, NULL, tmp->getSurf(), NULL, D3DTEXF_NONE);

@@ -39,6 +39,7 @@ void DS2Plugin::reloadShaders() {
 	if(ssao) ssao->reloadShader();
 	if(post) post->reloadShader();
 	if(bloom) bloom->reloadShader();
+	if(dof) dof->reloadShader();
 }
 
 
@@ -122,7 +123,7 @@ HRESULT DS2Plugin::redirectDrawPrimitiveUP(D3DPRIMITIVETYPE PrimitiveType, UINT 
 				d3ddev->StretchRect(rt, NULL, framesurf, NULL, D3DTEXF_NONE);
 			}
 			if(post && doPost) {
-				post->go(frametex, rt);
+				post->go(frametex, depth, rt);
 				d3ddev->StretchRect(rt, NULL, framesurf, NULL, D3DTEXF_NONE);
 			}
 			if(dof && doDof) {

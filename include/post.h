@@ -13,7 +13,7 @@ public:
 	Post(IDirect3DDevice9 *device, int width, int height, bool useSRGB = true);
     virtual ~Post();
 
-	void go(IDirect3DTexture9 *frame, IDirect3DSurface9 *dst);
+	void go(IDirect3DTexture9 *frame, IDirect3DTexture9 *depth, IDirect3DSurface9 *dst);
 	void reloadShader();
 
 private:
@@ -23,6 +23,7 @@ private:
 
 	ID3DXEffect *effect = NULL;
 	IDirect3DTexture9* noiseTex;	// NoiseTex.png
+	IDirect3DTexture9* depthTex;
 
 	D3DXHANDLE thisframeTexHandle;
 	D3DXHANDLE timerHandle;

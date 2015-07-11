@@ -62,6 +62,7 @@ void Post::reloadShader() {
 	thisframeTexHandle = effect->GetParameterByName(NULL, "thisframeTex");
 	timerHandle = effect->GetParameterByName(NULL, "timer");
 	noiseTexHandle = effect->GetParameterByName(NULL, "noiseTexture");
+	depthTexHandle = effect->GetParameterByName(NULL, "depthTex");
 
 	// Load noise
 	if(noiseTexHandle != NULL) {
@@ -79,11 +80,12 @@ Post::~Post() {
 	if(noiseTexHandle != NULL) SAFERELEASE(noiseTex);
 }
 
-void Post::go(IDirect3DTexture9 *frame, IDirect3DSurface9 *dst) {
+void Post::go(IDirect3DTexture9 *frame, IDirect3DTexture9 *depth, IDirect3DSurface9 *dst) {
 	device->SetVertexDeclaration(vertexDeclaration);
 	
     device->SetRenderTarget(0, dst);
     effect->SetTexture(thisframeTexHandle, frame);
+	if((depthTexHandle != NULL) && (depth != NULL)) effect->SetTexture(depthTex,depth);
 	if(timerHandle != NULL) effect->SetFloat(timerHandle, static_cast<float>(timer.elapsed() / 1000000.0));
 	if(noiseTexHandle != NULL) effect->SetTexture(noiseTexHandle, noiseTex);
 

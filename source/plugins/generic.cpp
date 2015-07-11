@@ -70,7 +70,7 @@ void GenericPlugin::process(IDirect3DSurface9* backBuffer) {
 			}
 			if(doPost && post) {
 				if(didAA) d3ddev->StretchRect(backBuffer, NULL, tmp->getSurf(), NULL, D3DTEXF_NONE);
-				post->go(tmp->getTex(), backBuffer);
+				post->go(tmp->getTex(), NULL, backBuffer);
 			}
 		}
 		SDLOG(8, "Generic plugin processing end\n");
