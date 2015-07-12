@@ -85,7 +85,7 @@ void Post::go(IDirect3DTexture9 *frame, IDirect3DTexture9 *depth, IDirect3DSurfa
 	
     device->SetRenderTarget(0, dst);
     effect->SetTexture(thisframeTexHandle, frame);
-	if((depthTexHandle != NULL) && (depth != NULL)) effect->SetTexture(depthTex,depth);
+	if((depthTexHandle != NULL) && (depth != NULL)) effect->SetTexture(depthTexHandle,depth);
 	if(timerHandle != NULL) effect->SetFloat(timerHandle, static_cast<float>(timer.elapsed() / 1000000.0));
 	if(noiseTexHandle != NULL) effect->SetTexture(noiseTexHandle, noiseTex);
 

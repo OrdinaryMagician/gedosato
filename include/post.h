@@ -28,4 +28,5 @@ private:
 	D3DXHANDLE thisframeTexHandle;
 	D3DXHANDLE timerHandle;
 	D3DXHANDLE noiseTexHandle;
+	D3DXHANDLE depthTexHandle;
 };
