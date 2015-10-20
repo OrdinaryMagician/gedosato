@@ -59,6 +59,7 @@ DragonAge2*                  || Dragon Age 2 Launcher or Configurator
 Earth2160*                   || Earth 2160
 Elminage                     || Elminage Gothic
 EoCApp                       || Divinity: Original Sin
+FairyFencer                  || Fairy Fencer F
 Fallout3                     || Fallout 3
 FalloutLauncher              || Fallout 3 Launcher
 FarCry2                      || FarCry 2
@@ -129,6 +130,7 @@ Rayman Legends               || Rayman Legends
 RE5DX10                      || Resident Evil 5 (DX10)
 RE5DX9                       || Resident Evil 5 (DX9)
 Reckoning                    || Kingdom's of Amalur: Reckoning
+RelicCOH                     || Company of Heroes (New Steam Version)
 RememberMe                   || Remember Me
 rfg                          || Red Faction: Guerrilla (DX9)
 Risen                        || Risen
@@ -143,7 +145,7 @@ ShippingPC-SkyGame           || Dark Void
 ShippingPC-StormGame         || Bulletstorm
 SkyrimLauncher               || The Elder Scrolls V: Skyrim Configurator
 SonicGenerations             || Sonic Generations
-SpaceMarine                  || SpaceMarine
+SpaceMarine                  || Warhammer 40,000: Space Marine
 SpecOpsTheLine               || Spec Ops: The Line
 StateOfDecay                 || State Of Decay
 TESV                         || The Elder Scrolls V: Skyrim

@@ -57,7 +57,7 @@ void sdlogtime(int level) {
 	SDLOG(level, "===== %s =====\n", getTimeString().c_str());
 }
 
-// run in a thread, to unload in case we cannot return false from DLLMain (e.g. Steam big picture)
+// run in a thread, to unload when signaled
 DWORD WINAPI hookUnloader(LPVOID) {
 	HANDLE unloadEvent = CreateEvent(NULL, TRUE, FALSE, "Global\\GeDoSaToUnloadEvent");
 	WaitForSingleObject(unloadEvent, INFINITE);
@@ -67,6 +67,7 @@ DWORD WINAPI hookUnloader(LPVOID) {
 BOOL WINAPI DllMain(HMODULE hDll, DWORD dwReason, PVOID pvReserved) {	
 	if(dwReason == DLL_PROCESS_ATTACH) {
 		OutputDebugString("GeDoSaTo: startup");
+		DisableThreadLibraryCalls(hDll);
 		g_dll = hDll;
 
 		// read install location from registry
@@ -75,25 +76,20 @@ BOOL WINAPI DllMain(HMODULE hDll, DWORD dwReason, PVOID pvReserved) {
 
 		// loaded in GeDoSaToTool, stay in memory
 		if(getExeFileName() == "GeDoSaToTool") {
+			OutputDebugString("GeDoSaTo: Tool mode");
 			g_tool = true;
 			return true;
 		}
 
 		// don't attach to processes on the blacklist / not on the whitelist
 		if(getUseBlacklist() ? onList(getExeFileName(), "blacklist") : !onList(getExeFileName(), "whitelist")) {
-			OutputDebugString("GeDoSaTo: blacklisted / not whitelisted");
-			// Prevent steam big picture mode crash
-			if(boost::iequals(getExeFileName(), "Steam")) {
-				DWORD threadid = 0;
-				CreateThread(NULL, 0, &hookUnloader, NULL, 0, &threadid);
-				return true;
-			}
-			else {
-				return false;
-			}
+			OutputDebugString(format("GeDoSaTo: blacklisted / not whitelisted on %s", getExeFileName()).c_str());
+			DWORD threadid = 0;
+			CreateThread(NULL, 0, &hookUnloader, NULL, 0, &threadid);
+			return true;
 		}
 		g_active = true;
-		OutputDebugString("GeDoSaTo: Active");
+		OutputDebugString(format("GeDoSaTo: Active on %s", getExeFileName()).c_str());
 		
 		// initialize log
 		string logFn = format("logs\\%s_%s.log", getExeFileName().c_str(), getTimeString().c_str());
@@ -134,11 +130,16 @@ BOOL WINAPI DllMain(HMODULE hDll, DWORD dwReason, PVOID pvReserved) {
 		if(!Settings::get().getDelayDetouring()) startDetour();
 		return true;
 	}
-	if(dwReason == DLL_PROCESS_DETACH && g_active) {
-		Settings::get().shutdown();
-		endDetour();
-		SDLOG(-1, "===== end =\n");
-		fclose(g_oFile);
+	if(dwReason == DLL_PROCESS_DETACH) {
+		OutputDebugString(format("GeDoSaTo: Exiting from %s", getExeFileName()).c_str());
+		if(g_active) {
+			OutputDebugString("GeDoSaTo: was active");
+			Settings::get().shutdown();
+			endDetour();
+			SDLOG(-1, "===== end =\n");
+			fclose(g_oFile);
+		}
+		return true;
 	}
     return false;
 }
@@ -154,7 +155,7 @@ const std::string& getInstallDirectory() {
 	return installDir;
 }
 const bool getUseBlacklist() {
-	return getRegString(REG_KEY_PATH, "UseBlacklist") == "True";
+	return getRegBool(REG_KEY_PATH, "UseBlacklist");
 }
 
 

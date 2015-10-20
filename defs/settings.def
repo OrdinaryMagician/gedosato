@@ -44,6 +44,10 @@ SETTING(bool, EnableAlternativeTextureDumping, "enableAlternativeTextureDumping"
 SETTING(bool, EnableTextureOverride, "enableTextureOverride", false)
 SETTING(bool, EnableTextureMarking, "enableTextureMarking", false)
 
+SETTING(unsigned, TextureScalingMode, "textureScalingMode", 0)
+SETTING(unsigned, TextureScalingFactor, "textureScalingFactor", 1)
+SETTING(bool, EnableTextureDeposterize, "enableTextureDeposterize", false)
+
 // Mouse options
 SETTING(bool, ModifyGetCursorPos, "modifyGetCursorPos", true)
 SETTING(bool, ModifySetCursorPos, "modifySetCursorPos", true)
@@ -62,6 +66,7 @@ SETTING(bool, ForceBorderlessFullscreen, "forceBorderlessFullscreen", false)
 SETTING(bool, HideMouseCursor, "hideMouseCursor", false)
 SETTING(bool, ForceWindowedMode, "forceWindowedMode", false)
 SETTING(bool, ForceFullscreenMode, "forceFullscreenMode", false)
+SETTING(bool, PreventMenu, "preventMenu", false)
 
 // Injection options
 SETTING(string, InjectPSHash, "injectPSHash", "")
